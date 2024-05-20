@@ -6,13 +6,18 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet weak private var questionTitleLabel: UILabel!
     @IBOutlet weak private var indexLabel: UILabel!
     @IBOutlet weak private var imageView: UIImageView!
-    @IBOutlet weak var questionText: UILabel!
-    @IBOutlet weak var noButton: UIButton!
-    @IBOutlet weak var yesButton: UIButton!
+    @IBOutlet weak private var questionText: UILabel!
+    @IBOutlet weak private var noButton: UIButton!
+    @IBOutlet weak private var yesButton: UIButton!
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Настройка скругления рамки
+        imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
+        imageView.layer.borderWidth = 0 // толщина рамки
+        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         
         // Установка шрифтов для лейблов, так как они не отображаются в стори борде
         questionTitleLabel.font = UIFont(name: "YS Display-Medium.ttf", size: 20)
@@ -30,18 +35,7 @@ final class MovieQuizViewController: UIViewController {
         show(quizQuestion: quizQuestion)
     }
     
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        // Действие по нажатию на кнопку Нет
-        clickbuttonAction(false)
-    }
-    
-    
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        // Действие по нажатию на кнопку Да
-        clickbuttonAction(true)
-    }
-    
-    private func clickbuttonAction(_ userAnswer: Bool){
+    private func clickButtonAction(_ userAnswer: Bool){
         // Функция с логикой нажатия на кнопку Да или Нет
         
         // Проверяем правильность ответа пользователя
@@ -55,8 +49,8 @@ final class MovieQuizViewController: UIViewController {
         
         // запускаем задачу через 1 секунду c помощью диспетчера задач
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-           // через 1 секунду показываем следующий вопрос
-           self.showNextQuestionOrResults()
+            // через 1 секунду показываем следующий вопрос
+            self.showNextQuestionOrResults()
         }
     }
     
@@ -80,7 +74,7 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
         imageView.layer.borderWidth = 8 // толщина рамки
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor // делаем рамку красной/зеленой в зависимости от правильности ответа
-        imageView.layer.cornerRadius = 6 // радиус скругления углов рамки
+        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
     }
     
     private func showQuizResult() {
@@ -92,7 +86,7 @@ final class MovieQuizViewController: UIViewController {
             message: "Ваш результат: \(correctAnswers)/10", // текст во всплывающем окне
             preferredStyle: .alert
         ) // preferredStyle может быть .alert или .actionSheet
-
+        
         // создаём для алерта кнопку с действием
         // в замыкании пишем, что должно происходить при нажатии на кнопку
         let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { _ in
@@ -100,10 +94,10 @@ final class MovieQuizViewController: UIViewController {
             let quizQuestion = self.convert(model: questions[currentQuestionIndex])
             self.show(quizQuestion: quizQuestion)
         }
-
+        
         // добавляем в алерт кнопку
         alert.addAction(action)
-
+        
         // показываем всплывающее окно
         self.present(alert, animated: true, completion: nil)
     }
@@ -126,6 +120,17 @@ final class MovieQuizViewController: UIViewController {
         questionText.text = question.question
         indexLabel.text = question.questionNumber
         imageView.layer.borderWidth = 0
+    }
+    
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        // Действие по нажатию на кнопку Нет
+        clickButtonAction(false)
+    }
+    
+    
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        // Действие по нажатию на кнопку Да
+        clickButtonAction(true)
     }
 }
 
@@ -162,91 +167,91 @@ private var correctAnswers = 0
 // массив с моковыми вопросами для квиза
 private let questions: [QuizQuestion] = [
     QuizQuestion(
-//        Картинка: The Godfather
-//        Настоящий рейтинг: 9,2
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: The Godfather
+        //        Настоящий рейтинг: 9,2
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "The Godfather",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: The Dark Knight
-//        Настоящий рейтинг: 9
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: The Dark Knight
+        //        Настоящий рейтинг: 9
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "The Dark Knight",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: Kill Bill
-//        Настоящий рейтинг: 8,1
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: Kill Bill
+        //        Настоящий рейтинг: 8,1
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "Kill Bill",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: The Avengers
-//        Настоящий рейтинг: 8
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: The Avengers
+        //        Настоящий рейтинг: 8
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "The Avengers",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: Deadpool
-//        Настоящий рейтинг: 8
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: Deadpool
+        //        Настоящий рейтинг: 8
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "Deadpool",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: The Green Knight
-//        Настоящий рейтинг: 6,6
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: ДА
+        //        Картинка: The Green Knight
+        //        Настоящий рейтинг: 6,6
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: ДА
         image: "The Green Knight",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: true
     ),
     QuizQuestion(
-//        Картинка: Old
-//        Настоящий рейтинг: 5,8
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: НЕТ
+        //        Картинка: Old
+        //        Настоящий рейтинг: 5,8
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: НЕТ
         image: "Old",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: false
     ),
     QuizQuestion(
-//        Картинка: The Ice Age Adventures of Buck Wild
-//        Настоящий рейтинг: 4,3
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: НЕТ
+        //        Картинка: The Ice Age Adventures of Buck Wild
+        //        Настоящий рейтинг: 4,3
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: НЕТ
         image: "The Ice Age Adventures of Buck Wild",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: false
     ),
     QuizQuestion(
-//        Картинка: Tesla
-//        Настоящий рейтинг: 5,1
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: НЕТ
+        //        Картинка: Tesla
+        //        Настоящий рейтинг: 5,1
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: НЕТ
         image: "Tesla",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: false
     ),
     QuizQuestion(
-//        Картинка: Vivarium
-//        Настоящий рейтинг: 5,8
-//        Вопрос: Рейтинг этого фильма больше чем 6?
-//        Ответ: НЕТ
+        //        Картинка: Vivarium
+        //        Настоящий рейтинг: 5,8
+        //        Вопрос: Рейтинг этого фильма больше чем 6?
+        //        Ответ: НЕТ
         image: "Vivarium",
         text: "Рейтинг этого фильма больше чем 6?",
         correctAnswer: false
@@ -315,4 +320,4 @@ private let questions: [QuizQuestion] = [
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: НЕТ
-*/
+ */
