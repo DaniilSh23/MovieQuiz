@@ -136,7 +136,7 @@ final class MovieQuizViewController: UIViewController {
 
 
 
-struct QuizStepViewModel {
+private struct QuizStepViewModel {
     // Структура - вью модель для состояния "Вопрос показан"
     
     // картинка с афишей фильма с типом UIImage
@@ -148,7 +148,7 @@ struct QuizStepViewModel {
 }
 
 
-struct QuizQuestion {
+private struct QuizQuestion {
     // Структура, отражающая данные, необходимые для экрана с вопросом квиза
     
     let image: String
