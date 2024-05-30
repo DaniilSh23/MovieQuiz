@@ -3,6 +3,13 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     // Вью-класс для основного экрана с вопросами квиза
     
+    // переменная с индексом текущего вопроса, начальное значение 0
+    // (по этому индексу будем искать вопрос в массиве)
+    private var currentQuestionIndex = 0
+
+    // переменная со счётчиком правильных ответов
+    private var correctAnswers = 0
+    
     @IBOutlet weak private var questionTitleLabel: UILabel!
     @IBOutlet weak private var indexLabel: UILabel!
     @IBOutlet weak private var imageView: UIImageView!
@@ -19,16 +26,16 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderWidth = 0 // толщина рамки
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         
-        // Установка шрифтов для лейблов, так как они не отображаются в стори борде
-        questionTitleLabel.font = UIFont(name: "YS Display-Medium.ttf", size: 20)
-        indexLabel.font = UIFont(name: "YS Display-Medium.ttf", size: 20)
-        questionText.font = UIFont(name: "YS Display-Bold.ttf", size: 23)
+        // Установка шрифтов для лейблов и кнопок, так как они не отображаются в стори борде
+        questionTitleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        indexLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        questionText.font = UIFont(name: "YSDisplay-Bold", size: 23)
         
         // Установка кнопкам скругленных краев, так как настройка в стори борде, взятая из урока, ничего не меняет
         noButton.layer.cornerRadius = 15
-        noButton.titleLabel?.font = UIFont(name: "YS Display-Medium", size: 20)
+        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         yesButton.layer.cornerRadius = 15
-        yesButton.titleLabel?.font = UIFont(name: "YS Display-Medium", size: 20)
+        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
         
         let quizQuestion = convert(model: questions[currentQuestionIndex])
@@ -90,8 +97,8 @@ final class MovieQuizViewController: UIViewController {
         // создаём для алерта кнопку с действием
         // в замыкании пишем, что должно происходить при нажатии на кнопку
         let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { _ in
-            correctAnswers = 0
-            let quizQuestion = self.convert(model: questions[currentQuestionIndex])
+            self.correctAnswers = 0
+            let quizQuestion = self.convert(model: questions[self.currentQuestionIndex])
             self.show(quizQuestion: quizQuestion)
         }
         
@@ -156,13 +163,6 @@ private struct QuizQuestion {
     let correctAnswer: Bool
 }
 
-
-// переменная с индексом текущего вопроса, начальное значение 0
-// (по этому индексу будем искать вопрос в массиве)
-private var currentQuestionIndex = 0
-
-// переменная со счётчиком правильных ответов
-private var correctAnswers = 0
 
 // массив с моковыми вопросами для квиза
 private let questions: [QuizQuestion] = [
