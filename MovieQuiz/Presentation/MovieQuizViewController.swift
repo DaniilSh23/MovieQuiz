@@ -4,7 +4,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Вью-класс для основного экрана с вопросами квиза
     
     private let questionAmount: Int = 10
-    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertDelegate: AlertPresenterProtocol = AlertPresenter()
     private var currentQuestionIndex: Int = 0
@@ -16,7 +16,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet weak private var imageView: UIImageView!
     @IBOutlet weak private var questionText: UILabel!
     @IBOutlet weak private var noButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak private var yesButton: UIButton!
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -44,12 +46,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.alertDelegate = alertDelegate
         
         // Делегат фабрики вопросов
-        let newQuestionFactory = QuestionFactory()  // Создаём экземпляр фабрики для ее настройки
-        newQuestionFactory.delegate = self  // Устанавливаем связь фабрика – делегат.
-        self.questionFactory = newQuestionFactory   // Сохраняем подготовленный экземляр в свойство вью-контроллера
-        newQuestionFactory.requestNextQuestion()    // Вызываем у фабрики метод для получения нового вопроса. Фабрика затем сама вызовет метод текущего класса (делегата) для отображения вопроса на экране (это метод didReceiveNextQuestion)
+        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)  // Создаём экземпляр фабрики для ее настройки
         
         statisticService = StatisticService()
+        
+        showLoadingIndicator()
+        self.questionFactory?.loadData()
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -99,7 +101,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             showQuizResult()
         } else {    // показываем следующий вопрос
             currentQuestionIndex += 1
-            self.questionFactory.requestNextQuestion()
+            self.questionFactory?.requestNextQuestion()
         }
     }
     
@@ -133,7 +135,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             completion: {[weak self] in
                 self?.currentQuestionIndex = 0
                 self?.correctAnswers = 0
-                self?.questionFactory.requestNextQuestion()
+                self?.questionFactory?.requestNextQuestion()
             })
         self.alertDelegate.show(alertModel: alertModel)
         correctAnswers = 0
@@ -143,7 +145,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // приватный метод конвертации, который принимает моковый вопрос и возвращает вью модель для главного экрана
         
         let questionStep = QuizStepViewModel( // Создаём константу questionStep и вызываем конструктор QuizStepViewModel
-            image: UIImage(named: model.image) ?? UIImage(), // Инициализируем картинку с помощью конструктора UIImage(named: ); если картинки с таким названием не найдётся, подставляем пустую
+            image: UIImage(data: model.image) ?? UIImage(), // Инициализируем картинку с помощью конструктора UIImage(named: ); если картинки с таким названием не найдётся, подставляем пустую
             question: model.text, // Просто забираем уже готовый вопрос из мокового вопроса
             questionNumber: "\(currentQuestionIndex + 1)/\(questionAmount)") // Высчитываем номер вопроса с помощью переменной текущего вопроса currentQuestionIndex и массива со списком вопросов questions
         return questionStep
@@ -168,6 +170,52 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         // Действие по нажатию на кнопку Да
         clickButtonAction(true)
+    }
+    
+    private func showLoadingIndicator() {
+        // Функция для отображения индикатора загрузки
+        activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
+        activityIndicator.startAnimating() // включаем анимацию
+    }
+    
+    private func hideLoadingIndicator() {
+        // Функция для скрытия индикатора загрузки
+        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        // Функция, которая отображает алерт с ошибкой загрузки
+        hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        // показываем алерт с ошибкой загрузки данных по сети"
+        let alertModel = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать еще раз",
+            completion: {[weak self] in
+                guard let self = self else { return }
+                
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
+            }
+        )
+        self.alertDelegate.show(alertModel: alertModel)
+        correctAnswers = 0
+    }
+    
+    func didLoadDataFromServer() {
+        // Метод для выполнения действий в случае успешной загрузки данных по сети
+        
+        hideLoadingIndicator()
+        self.questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        // Метод для обработки неудачного запроса данных от апи
+    
+        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
     }
 }
 

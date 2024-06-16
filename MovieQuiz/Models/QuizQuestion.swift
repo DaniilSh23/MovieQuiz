@@ -11,7 +11,7 @@ import Foundation
 struct QuizQuestion {
     // Структура, отражающая данные, необходимые для экрана с вопросом квиза
     
-    let image: String
+    let image: Data
     let text: String
     let correctAnswer: Bool
 }

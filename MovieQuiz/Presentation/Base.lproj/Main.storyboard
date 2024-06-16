@@ -115,6 +115,9 @@
                                     <constraint firstItem="ax5-Vi-Gip" firstAttribute="leading" secondItem="tIQ-BK-L64" secondAttribute="leading" id="wJa-L7-Kki"/>
                                 </constraints>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Cpd-X6-dKp">
+                                <rect key="frame" x="205" y="456" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
@@ -122,10 +125,13 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tIQ-BK-L64" secondAttribute="trailing" constant="20" id="9yA-Fq-EhP"/>
                             <constraint firstItem="tIQ-BK-L64" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="CfB-nH-i5j"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tIQ-BK-L64" secondAttribute="bottom" id="P9U-O3-y4p"/>
+                            <constraint firstItem="Cpd-X6-dKp" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fja-lh-UhG"/>
                             <constraint firstItem="tIQ-BK-L64" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="kdf-h9-70W"/>
+                            <constraint firstItem="Cpd-X6-dKp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qef-4G-ZRB"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="Cpd-X6-dKp" id="cZv-af-GIf"/>
                         <outlet property="imageView" destination="wpJ-Pc-ikk" id="XMk-q0-fTe"/>
                         <outlet property="indexLabel" destination="Vsw-7P-zD9" id="tzP-Nj-pue"/>
                         <outlet property="noButton" destination="Gtm-gH-SZ1" id="xts-b3-Qtd"/>
