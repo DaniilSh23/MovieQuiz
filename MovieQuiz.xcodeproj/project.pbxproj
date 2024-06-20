@@ -19,10 +19,8 @@
 		0700F6192C05D09300B80BFC /* StatisticServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0700F6182C05D09300B80BFC /* StatisticServiceProtocol.swift */; };
 		0700F61B2C05D1BE00B80BFC /* GameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0700F61A2C05D1BE00B80BFC /* GameResult.swift */; };
 		0700F61D2C05D3A500B80BFC /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0700F61C2C05D3A500B80BFC /* StatisticService.swift */; };
-		0700F66F2C2315A000B80BFC /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F66D2C2315A000B80BFC /* YS Display-Bold.ttf */; };
-		0700F6702C2315A000B80BFC /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F66E2C2315A000B80BFC /* YS Display-Medium.ttf */; };
-		0700F6742C2315AB00B80BFC /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F6712C2315AB00B80BFC /* YS Display-Bold.ttf */; };
-		0700F6752C2315AB00B80BFC /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F6722C2315AB00B80BFC /* YS Display-Medium.ttf */; };
+		0700F68E2C243D7800B80BFC /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F68C2C243D7800B80BFC /* YS Display-Medium.ttf */; };
+		0700F68F2C243D7800B80BFC /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F68D2C243D7800B80BFC /* YS Display-Bold.ttf */; };
 		07E1FC5C2BFB6A4100C3E8DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD1ABABA2831907F00B3E448 /* Assets.xcassets */; };
 		AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
@@ -47,10 +45,8 @@
 		0700F6182C05D09300B80BFC /* StatisticServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticServiceProtocol.swift; sourceTree = "<group>"; };
 		0700F61A2C05D1BE00B80BFC /* GameResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResult.swift; sourceTree = "<group>"; };
 		0700F61C2C05D3A500B80BFC /* StatisticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticService.swift; sourceTree = "<group>"; };
-		0700F66D2C2315A000B80BFC /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YS Display-Bold.ttf"; path = "MovieQuiz/Resources/fonts/YS Display-Bold.ttf"; sourceTree = SOURCE_ROOT; };
-		0700F66E2C2315A000B80BFC /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YS Display-Medium.ttf"; path = "MovieQuiz/Resources/fonts/YS Display-Medium.ttf"; sourceTree = SOURCE_ROOT; };
-		0700F6712C2315AB00B80BFC /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
-		0700F6722C2315AB00B80BFC /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
+		0700F68C2C243D7800B80BFC /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YS Display-Medium.ttf"; path = "../../../../../Downloads/MovieQuizFonts/YS Display-Medium.ttf"; sourceTree = "<group>"; };
+		0700F68D2C243D7800B80BFC /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YS Display-Bold.ttf"; path = "../../../../../Downloads/MovieQuizFonts/YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		AD1ABAAE2831907B00B3E448 /* MovieQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1ABAB12831907B00B3E448 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,24 +95,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		0700F6732C2315AB00B80BFC /* MovieQuizFonts */ = {
-			isa = PBXGroup;
-			children = (
-				0700F6712C2315AB00B80BFC /* YS Display-Bold.ttf */,
-				0700F6722C2315AB00B80BFC /* YS Display-Medium.ttf */,
-			);
-			path = MovieQuizFonts;
-			sourceTree = "<group>";
-		};
-		0700F6762C2435BB00B80BFC /* fonts */ = {
-			isa = PBXGroup;
-			children = (
-				0700F66D2C2315A000B80BFC /* YS Display-Bold.ttf */,
-				0700F66E2C2315A000B80BFC /* YS Display-Medium.ttf */,
-			);
-			path = fonts;
-			sourceTree = "<group>";
-		};
 		8F4738322848DE2A005DF65E /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,7 +109,8 @@
 		8F4738332848DE46005DF65E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0700F6762C2435BB00B80BFC /* fonts */,
+				0700F68D2C243D7800B80BFC /* YS Display-Bold.ttf */,
+				0700F68C2C243D7800B80BFC /* YS Display-Medium.ttf */,
 				AD1ABABC2831907F00B3E448 /* LaunchScreen.storyboard */,
 				AD1ABABA2831907F00B3E448 /* Assets.xcassets */,
 				AD1ABABF2831907F00B3E448 /* Info.plist */,
@@ -158,7 +137,6 @@
 		AD1ABAB02831907B00B3E448 /* MovieQuiz */ = {
 			isa = PBXGroup;
 			children = (
-				0700F6732C2315AB00B80BFC /* MovieQuizFonts */,
 				0700F6052C0093EA00B80BFC /* Models */,
 				0700F6022C008EE800B80BFC /* Services */,
 				AD1ABAB12831907B00B3E448 /* AppDelegate.swift */,
@@ -240,12 +218,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD1ABABE2831907F00B3E448 /* LaunchScreen.storyboard in Resources */,
-				0700F6742C2315AB00B80BFC /* YS Display-Bold.ttf in Resources */,
+				0700F68E2C243D7800B80BFC /* YS Display-Medium.ttf in Resources */,
+				0700F68F2C243D7800B80BFC /* YS Display-Bold.ttf in Resources */,
 				AD1ABAB92831907B00B3E448 /* Main.storyboard in Resources */,
 				07E1FC5C2BFB6A4100C3E8DC /* Assets.xcassets in Resources */,
-				0700F66F2C2315A000B80BFC /* YS Display-Bold.ttf in Resources */,
-				0700F6702C2315A000B80BFC /* YS Display-Medium.ttf in Resources */,
-				0700F6752C2315AB00B80BFC /* YS Display-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
