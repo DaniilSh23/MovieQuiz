@@ -3,13 +3,12 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Вью-класс для основного экрана с вопросами квиза
     
-    private let questionAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertDelegate: AlertPresenterProtocol = AlertPresenter()
-    private var currentQuestionIndex: Int = 0
     private var correctAnswers = 0
     private var statisticService: StatisticServiceProtocol?
+    private let presenter = MovieQuizPresenter()
     
     @IBOutlet weak private var questionTitleLabel: UILabel!
     @IBOutlet weak private var indexLabel: UILabel!
@@ -62,7 +61,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
 
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         
         // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
         DispatchQueue.main.async {
@@ -96,11 +95,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNextQuestionOrResults() {
         // приватный метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
         
-        if currentQuestionIndex == questionAmount - 1 {    // состояние "Результат квиза"
-            currentQuestionIndex = 0
+        if presenter.isLastQuestion() {    // состояние "Результат квиза"
+            presenter.resetQuestionIndex()
             showQuizResult()
         } else {    // показываем следующий вопрос
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             self.questionFactory?.requestNextQuestion()
         }
     }
@@ -118,11 +117,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showQuizResult() {
         // Метод для показа результатов квиза
         
-        statisticService!.store(correct: correctAnswers, total: questionAmount)
+        statisticService!.store(correct: correctAnswers, total: presenter.questionsAmount)
         
         // Форматируем текст для алерта
         let text = """
-        Ваш результат: \(correctAnswers)/\(questionAmount)
+        Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
         Количество сыгранных квизов: \(statisticService!.gamesCount)
         Рекорд: \(statisticService!.bestGame.correct)/\(statisticService!.bestGame.total) (\(statisticService!.bestGame.date.dateTimeString))
         Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%"
@@ -133,22 +132,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             message: text,
             buttonText: "Сыграть ещё раз",
             completion: {[weak self] in
-                self?.currentQuestionIndex = 0
+                self?.presenter.resetQuestionIndex()
                 self?.correctAnswers = 0
                 self?.questionFactory?.requestNextQuestion()
             })
         self.alertDelegate.show(alertModel: alertModel)
         correctAnswers = 0
-    }
-    
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        // приватный метод конвертации, который принимает моковый вопрос и возвращает вью модель для главного экрана
-        
-        let questionStep = QuizStepViewModel( // Создаём константу questionStep и вызываем конструктор QuizStepViewModel
-            image: UIImage(data: model.image) ?? UIImage(), // Инициализируем картинку с помощью конструктора UIImage(named: ); если картинки с таким названием не найдётся, подставляем пустую
-            question: model.text, // Просто забираем уже готовый вопрос из мокового вопроса
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionAmount)") // Высчитываем номер вопроса с помощью переменной текущего вопроса currentQuestionIndex и массива со списком вопросов questions
-        return questionStep
     }
     
     private func show(quiz question: QuizStepViewModel) {
@@ -196,7 +185,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             completion: {[weak self] in
                 guard let self = self else { return }
                 
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
             }

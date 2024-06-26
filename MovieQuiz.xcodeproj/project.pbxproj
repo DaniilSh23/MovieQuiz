@@ -29,6 +29,7 @@
 		0700F69B2C24910700B80BFC /* MovieQuizUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0700F69A2C24910700B80BFC /* MovieQuizUITests.swift */; };
 		0700F6A52C29ADE400B80BFC /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F6A32C29ADE300B80BFC /* YS Display-Bold.ttf */; };
 		0700F6A62C29ADE400B80BFC /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0700F6A42C29ADE400B80BFC /* YS Display-Medium.ttf */; };
+		077DD4582C2C69A700C329F8 /* MovieQuizPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077DD4572C2C69A700C329F8 /* MovieQuizPresenter.swift */; };
 		07E1FC5C2BFB6A4100C3E8DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD1ABABA2831907F00B3E448 /* Assets.xcassets */; };
 		AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
@@ -82,6 +83,7 @@
 		0700F69A2C24910700B80BFC /* MovieQuizUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizUITests.swift; sourceTree = "<group>"; };
 		0700F6A32C29ADE300B80BFC /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		0700F6A42C29ADE400B80BFC /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
+		077DD4572C2C69A700C329F8 /* MovieQuizPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizPresenter.swift; sourceTree = "<group>"; };
 		AD1ABAAE2831907B00B3E448 /* MovieQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1ABAB12831907B00B3E448 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */,
 				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 				0700F6142C049E3C00B80BFC /* AlertPresenterProtocol.swift */,
+				077DD4572C2C69A700C329F8 /* MovieQuizPresenter.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				0700F6072C0093FF00B80BFC /* QuizStepViewModel.swift in Sources */,
 				0700F60B2C00941C00B80BFC /* QuizQuestion.swift in Sources */,
+				077DD4582C2C69A700C329F8 /* MovieQuizPresenter.swift in Sources */,
 				0700F6112C048CC200B80BFC /* AlertPresenter.swift in Sources */,
 				0700F6522C1F0F0700B80BFC /* MoviesLoadingProtocol.swift in Sources */,
 				0700F6042C008F4B00B80BFC /* QuestionFactory.swift in Sources */,
