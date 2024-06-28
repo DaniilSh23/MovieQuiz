@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MovieQuizPresenter {
+final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
@@ -96,6 +96,56 @@ final class MovieQuizPresenter {
                 self?.questionFactory?.requestNextQuestion()
             })
         viewController!.alertDelegate.show(alertModel: alertModel)
+    }
+    
+    func didLoadDataFromServer() {
+        // Метод для выполнения действий в случае успешной загрузки данных по сети
+        
+        viewController!.hideLoadingIndicator()
+        self.questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        // Метод для обработки неудачного запроса данных от апи
+    
+        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+    }
+    
+    private func showNetworkError(message: String) {
+        // Функция, которая отображает алерт с ошибкой загрузки
+        
+        viewController!.hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        // показываем алерт с ошибкой загрузки данных по сети"
+        let alertModel = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать еще раз",
+            completion: {[weak self] in
+                guard let self = self else { return }
+                
+                self.resetQuestionIndex()
+                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
+            }
+        )
+        viewController!.alertDelegate.show(alertModel: alertModel)
+    }
+    
+    // MARK: - QuestionFactoryDelegate
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        // проверка, что вопрос не nil
+        guard let question = question else {
+            return
+        }
+
+        self.currentQuestion = question
+        let viewModel = self.convert(model: question)
+        
+        // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
+        DispatchQueue.main.async {
+            [weak self] in self?.viewController!.showQuestion(quiz: viewModel)
+        }
+        viewController!.showQuestion(quiz: viewModel)
     }
 }
 

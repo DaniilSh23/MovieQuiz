@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+final class MovieQuizViewController: UIViewController {
     // Вью-класс для основного экрана с вопросами квиза
     
     var alertDelegate: AlertPresenterProtocol = AlertPresenter()
@@ -42,7 +42,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.alertDelegate = alertDelegate
         
         // Делегат фабрики вопросов
-        presenter.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)  // Создаём экземпляр фабрики для ее настройки
+        presenter.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: presenter)  // Создаём экземпляр фабрики для ее настройки
         
         presenter.statisticService = StatisticService()
         
@@ -52,22 +52,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         presenter.viewController = self
     }
     
-    // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        // проверка, что вопрос не nil
-        guard let question = question else {
-            return
-        }
-
-        presenter.currentQuestion = question
-        let viewModel = presenter.convert(model: question)
-        
-        // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
-        DispatchQueue.main.async {
-            [weak self] in self?.show(quiz: viewModel)
-        }
-        show(quiz: viewModel)
-    }
+//    // MARK: - QuestionFactoryDelegate
+//    func didReceiveNextQuestion(question: QuizQuestion?) {
+//        // проверка, что вопрос не nil
+//        guard let question = question else {
+//            return
+//        }
+//
+//        presenter.currentQuestion = question
+//        let viewModel = presenter.convert(model: question)
+//        
+//        // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
+//        DispatchQueue.main.async {
+//            [weak self] in self?.show(quiz: viewModel)
+//        }
+//        show(quiz: viewModel)
+//    }
     
     func showAnswerResult(isCorrect: Bool) {
         // приватный метод, который меняет цвет рамки
@@ -79,7 +79,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
     }
     
-    private func show(quiz question: QuizStepViewModel) {
+    func showQuestion(quiz question: QuizStepViewModel) {
         // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
 
         // Накидываем контент на экран
@@ -112,38 +112,38 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         activityIndicator.stopAnimating()
     }
     
-    func didLoadDataFromServer() {
-        // Метод для выполнения действий в случае успешной загрузки данных по сети
-        
-        self.hideLoadingIndicator()
-        presenter.questionFactory?.requestNextQuestion()
-    }
-
-    func didFailToLoadData(with error: Error) {
-        // Метод для обработки неудачного запроса данных от апи
-    
-        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
-    }
-    
-    private func showNetworkError(message: String) {
-        // Функция, которая отображает алерт с ошибкой загрузки
-        
-        self.hideLoadingIndicator() // скрываем индикатор загрузки
-        
-        // показываем алерт с ошибкой загрузки данных по сети"
-        let alertModel = AlertModel(
-            title: "Что-то пошло не так(",
-            message: "Невозможно загрузить данные",
-            buttonText: "Попробовать еще раз",
-            completion: {[weak self] in
-                guard let self = self else { return }
-                
-                presenter.resetQuestionIndex()
-                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
-            }
-        )
-        self.alertDelegate.show(alertModel: alertModel)
-    }
+//    func didLoadDataFromServer() {
+//        // Метод для выполнения действий в случае успешной загрузки данных по сети
+//        
+//        self.hideLoadingIndicator()
+//        presenter.questionFactory?.requestNextQuestion()
+//    }
+//
+//    func didFailToLoadData(with error: Error) {
+//        // Метод для обработки неудачного запроса данных от апи
+//    
+//        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+//    }
+//    
+//    private func showNetworkError(message: String) {
+//        // Функция, которая отображает алерт с ошибкой загрузки
+//        
+//        self.hideLoadingIndicator() // скрываем индикатор загрузки
+//        
+//        // показываем алерт с ошибкой загрузки данных по сети"
+//        let alertModel = AlertModel(
+//            title: "Что-то пошло не так(",
+//            message: "Невозможно загрузить данные",
+//            buttonText: "Попробовать еще раз",
+//            completion: {[weak self] in
+//                guard let self = self else { return }
+//                
+//                presenter.resetQuestionIndex()
+//                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
+//            }
+//        )
+//        self.alertDelegate.show(alertModel: alertModel)
+//    }
 }
 
 
