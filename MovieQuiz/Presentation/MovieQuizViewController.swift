@@ -4,7 +4,6 @@ final class MovieQuizViewController: UIViewController {
     // Вью-класс для основного экрана с вопросами квиза
     
     var alertDelegate: AlertPresenterProtocol = AlertPresenter()
-//    var correctAnswers = 0
     private let presenter = MovieQuizPresenter()
     
     @IBOutlet weak private var questionTitleLabel: UILabel!
@@ -52,23 +51,6 @@ final class MovieQuizViewController: UIViewController {
         presenter.viewController = self
     }
     
-//    // MARK: - QuestionFactoryDelegate
-//    func didReceiveNextQuestion(question: QuizQuestion?) {
-//        // проверка, что вопрос не nil
-//        guard let question = question else {
-//            return
-//        }
-//
-//        presenter.currentQuestion = question
-//        let viewModel = presenter.convert(model: question)
-//        
-//        // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
-//        DispatchQueue.main.async {
-//            [weak self] in self?.show(quiz: viewModel)
-//        }
-//        show(quiz: viewModel)
-//    }
-    
     func showAnswerResult(isCorrect: Bool) {
         // приватный метод, который меняет цвет рамки
         // принимает на вход булевое значение и ничего не возвращает
@@ -111,39 +93,6 @@ final class MovieQuizViewController: UIViewController {
         activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
-    
-//    func didLoadDataFromServer() {
-//        // Метод для выполнения действий в случае успешной загрузки данных по сети
-//        
-//        self.hideLoadingIndicator()
-//        presenter.questionFactory?.requestNextQuestion()
-//    }
-//
-//    func didFailToLoadData(with error: Error) {
-//        // Метод для обработки неудачного запроса данных от апи
-//    
-//        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
-//    }
-//    
-//    private func showNetworkError(message: String) {
-//        // Функция, которая отображает алерт с ошибкой загрузки
-//        
-//        self.hideLoadingIndicator() // скрываем индикатор загрузки
-//        
-//        // показываем алерт с ошибкой загрузки данных по сети"
-//        let alertModel = AlertModel(
-//            title: "Что-то пошло не так(",
-//            message: "Невозможно загрузить данные",
-//            buttonText: "Попробовать еще раз",
-//            completion: {[weak self] in
-//                guard let self = self else { return }
-//                
-//                presenter.resetQuestionIndex()
-//                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
-//            }
-//        )
-//        self.alertDelegate.show(alertModel: alertModel)
-//    }
 }
 
 

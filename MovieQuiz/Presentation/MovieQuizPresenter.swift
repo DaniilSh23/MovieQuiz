@@ -58,15 +58,14 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             // через 1 секунду показываем следующий вопрос
             
             guard let self = self else { return } // разворачиваем слабую ссылку
-            self.showNextQuestionOrResults()
+            self.proceedToNextQuestionOrResults()
         }
     }
     
-    private func showNextQuestionOrResults() {
+    private func proceedToNextQuestionOrResults() {
         // метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
         
         if self.isLastQuestion() {    // состояние "Результат квиза"
-//            self.resetQuestionIndex()
             self.showQuizResult()
         } else {    // показываем следующий вопрос
             self.switchToNextQuestion()
