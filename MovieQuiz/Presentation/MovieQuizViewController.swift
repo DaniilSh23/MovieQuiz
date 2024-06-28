@@ -3,10 +3,8 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Вью-класс для основного экрана с вопросами квиза
     
-//    var questionFactory: QuestionFactoryProtocol?
     var alertDelegate: AlertPresenterProtocol = AlertPresenter()
-    var correctAnswers = 0
-//    private var statisticService: StatisticServiceProtocol?
+//    var correctAnswers = 0
     private let presenter = MovieQuizPresenter()
     
     @IBOutlet weak private var questionTitleLabel: UILabel!
@@ -71,18 +69,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         show(quiz: viewModel)
     }
     
-//    func showNextQuestionOrResults() {
-//        // метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
-//        
-//        if presenter.isLastQuestion() {    // состояние "Результат квиза"
-//            presenter.resetQuestionIndex()
-//            showQuizResult()
-//        } else {    // показываем следующий вопрос
-//            presenter.switchToNextQuestion()
-//            self.questionFactory?.requestNextQuestion()
-//        }
-//    }
-    
     func showAnswerResult(isCorrect: Bool) {
         // приватный метод, который меняет цвет рамки
         // принимает на вход булевое значение и ничего не возвращает
@@ -92,32 +78,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor // делаем рамку красной/зеленой в зависимости от правильности ответа
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
     }
-    
-//    func showQuizResult() {
-//        // Метод для показа результатов квиза
-//        
-//        statisticService!.store(correct: correctAnswers, total: presenter.questionsAmount)
-//        
-//        // Форматируем текст для алерта
-//        let text = """
-//        Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
-//        Количество сыгранных квизов: \(statisticService!.gamesCount)
-//        Рекорд: \(statisticService!.bestGame.correct)/\(statisticService!.bestGame.total) (\(statisticService!.bestGame.date.dateTimeString))
-//        Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%"
-//        """
-//        
-//        let alertModel = AlertModel(
-//            title: "Этот раунд окончен!",
-//            message: text,
-//            buttonText: "Сыграть ещё раз",
-//            completion: {[weak self] in
-//                self?.presenter.resetQuestionIndex()
-//                self?.correctAnswers = 0
-//                self?.questionFactory?.requestNextQuestion()
-//            })
-//        self.alertDelegate.show(alertModel: alertModel)
-//        correctAnswers = 0
-//    }
     
     private func show(quiz question: QuizStepViewModel) {
         // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
@@ -179,47 +139,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 guard let self = self else { return }
                 
                 presenter.resetQuestionIndex()
-                self.correctAnswers = 0
                 // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
             }
         )
         self.alertDelegate.show(alertModel: alertModel)
-        self.correctAnswers = 0
     }
-    
-//    private func showNetworkError(message: String) {
-//        // Функция, которая отображает алерт с ошибкой загрузки
-//        hideLoadingIndicator() // скрываем индикатор загрузки
-//        
-//        // показываем алерт с ошибкой загрузки данных по сети"
-//        let alertModel = AlertModel(
-//            title: "Что-то пошло не так(",
-//            message: "Невозможно загрузить данные",
-//            buttonText: "Попробовать еще раз",
-//            completion: {[weak self] in
-//                guard let self = self else { return }
-//                
-//                self.presenter.resetQuestionIndex()
-//                self.correctAnswers = 0
-//                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
-//            }
-//        )
-//        self.alertDelegate.show(alertModel: alertModel)
-//        correctAnswers = 0
-//    }
-//    
-//    func didLoadDataFromServer() {
-//        // Метод для выполнения действий в случае успешной загрузки данных по сети
-//        
-//        hideLoadingIndicator()
-//        presenter.questionFactory?.requestNextQuestion()
-//    }
-//
-//    func didFailToLoadData(with error: Error) {
-//        // Метод для обработки неудачного запроса данных от апи
-//    
-//        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
-//    }
 }
 
 

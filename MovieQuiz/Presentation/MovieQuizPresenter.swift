@@ -15,6 +15,7 @@ final class MovieQuizPresenter {
     weak var viewController: MovieQuizViewController?
     var statisticService: StatisticServiceProtocol?
     var questionFactory: QuestionFactoryProtocol?
+    private var correctAnswers = 0
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
@@ -22,6 +23,7 @@ final class MovieQuizPresenter {
     
     func resetQuestionIndex() {
         currentQuestionIndex = 0
+        correctAnswers = 0
     }
     
     func switchToNextQuestion() {
@@ -45,7 +47,7 @@ final class MovieQuizPresenter {
         
         // Проверяем правильность ответа пользователя
         if userAnswer == thisQuestion.correctAnswer {
-            viewController!.correctAnswers += 1
+            self.correctAnswers += 1
             viewController!.showAnswerResult(isCorrect: true)
         } else {
             viewController!.showAnswerResult(isCorrect: false)
@@ -64,7 +66,7 @@ final class MovieQuizPresenter {
         // метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
         
         if self.isLastQuestion() {    // состояние "Результат квиза"
-            self.resetQuestionIndex()
+//            self.resetQuestionIndex()
             self.showQuizResult()
         } else {    // показываем следующий вопрос
             self.switchToNextQuestion()
@@ -75,11 +77,11 @@ final class MovieQuizPresenter {
     func showQuizResult() {
         // Метод для показа результатов квиза
         
-        statisticService!.store(correct: viewController!.correctAnswers, total: self.questionsAmount)
+        statisticService!.store(correct: self.correctAnswers, total: self.questionsAmount)
         
         // Форматируем текст для алерта
         let text = """
-        Ваш результат: \(viewController!.correctAnswers)/\(self.questionsAmount)
+        Ваш результат: \(self.correctAnswers)/\(self.questionsAmount)
         Количество сыгранных квизов: \(statisticService!.gamesCount)
         Рекорд: \(statisticService!.bestGame.correct)/\(statisticService!.bestGame.total) (\(statisticService!.bestGame.date.dateTimeString))
         Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%"
@@ -91,11 +93,9 @@ final class MovieQuizPresenter {
             buttonText: "Сыграть ещё раз",
             completion: {[weak self] in
                 self?.resetQuestionIndex()
-                self?.viewController?.correctAnswers = 0
                 self?.questionFactory?.requestNextQuestion()
             })
         viewController!.alertDelegate.show(alertModel: alertModel)
-        viewController!.correctAnswers = 0
     }
 }
 
