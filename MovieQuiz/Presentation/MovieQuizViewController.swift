@@ -3,11 +3,10 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Вью-класс для основного экрана с вопросами квиза
     
-    private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
-    private var alertDelegate: AlertPresenterProtocol = AlertPresenter()
-    private var correctAnswers = 0
-    private var statisticService: StatisticServiceProtocol?
+//    var questionFactory: QuestionFactoryProtocol?
+    var alertDelegate: AlertPresenterProtocol = AlertPresenter()
+    var correctAnswers = 0
+//    private var statisticService: StatisticServiceProtocol?
     private let presenter = MovieQuizPresenter()
     
     @IBOutlet weak private var questionTitleLabel: UILabel!
@@ -22,7 +21,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Настройка скругления рамки
         imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
         imageView.layer.borderWidth = 0 // толщина рамки
@@ -45,12 +44,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.alertDelegate = alertDelegate
         
         // Делегат фабрики вопросов
-        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)  // Создаём экземпляр фабрики для ее настройки
+        presenter.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)  // Создаём экземпляр фабрики для ее настройки
         
-        statisticService = StatisticService()
+        presenter.statisticService = StatisticService()
         
         showLoadingIndicator()
-        self.questionFactory?.loadData()
+        presenter.questionFactory?.loadData()
+        
+        presenter.viewController = self
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -60,7 +61,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
 
-        currentQuestion = question
+        presenter.currentQuestion = question
         let viewModel = presenter.convert(model: question)
         
         // Оборачиваем метод show, чтобы изменения на экране точно выполнились в главной очереди.
@@ -70,41 +71,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         show(quiz: viewModel)
     }
     
-    private func clickButtonAction(_ userAnswer: Bool){
-        // Функция с логикой нажатия на кнопку Да или Нет
-        
-        guard let thisQuestion = currentQuestion else {return}
-        
-        // Проверяем правильность ответа пользователя
-        if userAnswer == thisQuestion.correctAnswer {
-            correctAnswers += 1
-            showAnswerResult(isCorrect: true)
-        } else {
-            showAnswerResult(isCorrect: false)
-        }
-        
-        // запускаем задачу через 1 секунду c помощью диспетчера задач
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            // через 1 секунду показываем следующий вопрос
-            
-            guard let self = self else { return } // разворачиваем слабую ссылку
-            self.showNextQuestionOrResults()
-        }
-    }
+//    func showNextQuestionOrResults() {
+//        // метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
+//        
+//        if presenter.isLastQuestion() {    // состояние "Результат квиза"
+//            presenter.resetQuestionIndex()
+//            showQuizResult()
+//        } else {    // показываем следующий вопрос
+//            presenter.switchToNextQuestion()
+//            self.questionFactory?.requestNextQuestion()
+//        }
+//    }
     
-    private func showNextQuestionOrResults() {
-        // приватный метод, который содержит логику перехода в один из сценариев (показать следующий вопрос/показать результаты квиза)
-        
-        if presenter.isLastQuestion() {    // состояние "Результат квиза"
-            presenter.resetQuestionIndex()
-            showQuizResult()
-        } else {    // показываем следующий вопрос
-            presenter.switchToNextQuestion()
-            self.questionFactory?.requestNextQuestion()
-        }
-    }
-    
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         // приватный метод, который меняет цвет рамки
         // принимает на вход булевое значение и ничего не возвращает
         
@@ -114,35 +93,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
     }
     
-    private func showQuizResult() {
-        // Метод для показа результатов квиза
-        
-        statisticService!.store(correct: correctAnswers, total: presenter.questionsAmount)
-        
-        // Форматируем текст для алерта
-        let text = """
-        Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
-        Количество сыгранных квизов: \(statisticService!.gamesCount)
-        Рекорд: \(statisticService!.bestGame.correct)/\(statisticService!.bestGame.total) (\(statisticService!.bestGame.date.dateTimeString))
-        Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%"
-        """
-        
-        let alertModel = AlertModel(
-            title: "Этот раунд окончен!",
-            message: text,
-            buttonText: "Сыграть ещё раз",
-            completion: {[weak self] in
-                self?.presenter.resetQuestionIndex()
-                self?.correctAnswers = 0
-                self?.questionFactory?.requestNextQuestion()
-            })
-        self.alertDelegate.show(alertModel: alertModel)
-        correctAnswers = 0
-    }
+//    func showQuizResult() {
+//        // Метод для показа результатов квиза
+//        
+//        statisticService!.store(correct: correctAnswers, total: presenter.questionsAmount)
+//        
+//        // Форматируем текст для алерта
+//        let text = """
+//        Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
+//        Количество сыгранных квизов: \(statisticService!.gamesCount)
+//        Рекорд: \(statisticService!.bestGame.correct)/\(statisticService!.bestGame.total) (\(statisticService!.bestGame.date.dateTimeString))
+//        Средняя точность: \(String(format: "%.2f", statisticService!.totalAccuracy))%"
+//        """
+//        
+//        let alertModel = AlertModel(
+//            title: "Этот раунд окончен!",
+//            message: text,
+//            buttonText: "Сыграть ещё раз",
+//            completion: {[weak self] in
+//                self?.presenter.resetQuestionIndex()
+//                self?.correctAnswers = 0
+//                self?.questionFactory?.requestNextQuestion()
+//            })
+//        self.alertDelegate.show(alertModel: alertModel)
+//        correctAnswers = 0
+//    }
     
     private func show(quiz question: QuizStepViewModel) {
         // приватный метод вывода на экран вопроса, который принимает на вход вью модель вопроса и ничего не возвращает
-        
+
         // Накидываем контент на экран
         imageView.image = question.image
         questionText.text = question.question
@@ -152,30 +131,44 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         // Действие по нажатию на кнопку Нет
-        clickButtonAction(false)
+        presenter.clickButtonAction(false)
     }
     
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         // Действие по нажатию на кнопку Да
-        clickButtonAction(true)
+        presenter.clickButtonAction(true)
     }
     
-    private func showLoadingIndicator() {
+    func showLoadingIndicator() {
         // Функция для отображения индикатора загрузки
         activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
         activityIndicator.startAnimating() // включаем анимацию
     }
     
-    private func hideLoadingIndicator() {
+    func hideLoadingIndicator() {
         // Функция для скрытия индикатора загрузки
         activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
     
+    func didLoadDataFromServer() {
+        // Метод для выполнения действий в случае успешной загрузки данных по сети
+        
+        self.hideLoadingIndicator()
+        presenter.questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        // Метод для обработки неудачного запроса данных от апи
+    
+        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+    }
+    
     private func showNetworkError(message: String) {
         // Функция, которая отображает алерт с ошибкой загрузки
-        hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        self.hideLoadingIndicator() // скрываем индикатор загрузки
         
         // показываем алерт с ошибкой загрузки данных по сети"
         let alertModel = AlertModel(
@@ -185,27 +178,48 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             completion: {[weak self] in
                 guard let self = self else { return }
                 
-                self.presenter.resetQuestionIndex()
+                presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
             }
         )
         self.alertDelegate.show(alertModel: alertModel)
-        correctAnswers = 0
+        self.correctAnswers = 0
     }
     
-    func didLoadDataFromServer() {
-        // Метод для выполнения действий в случае успешной загрузки данных по сети
-        
-        hideLoadingIndicator()
-        self.questionFactory?.requestNextQuestion()
-    }
-
-    func didFailToLoadData(with error: Error) {
-        // Метод для обработки неудачного запроса данных от апи
-    
-        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
-    }
+//    private func showNetworkError(message: String) {
+//        // Функция, которая отображает алерт с ошибкой загрузки
+//        hideLoadingIndicator() // скрываем индикатор загрузки
+//        
+//        // показываем алерт с ошибкой загрузки данных по сети"
+//        let alertModel = AlertModel(
+//            title: "Что-то пошло не так(",
+//            message: "Невозможно загрузить данные",
+//            buttonText: "Попробовать еще раз",
+//            completion: {[weak self] in
+//                guard let self = self else { return }
+//                
+//                self.presenter.resetQuestionIndex()
+//                self.correctAnswers = 0
+//                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
+//            }
+//        )
+//        self.alertDelegate.show(alertModel: alertModel)
+//        correctAnswers = 0
+//    }
+//    
+//    func didLoadDataFromServer() {
+//        // Метод для выполнения действий в случае успешной загрузки данных по сети
+//        
+//        hideLoadingIndicator()
+//        presenter.questionFactory?.requestNextQuestion()
+//    }
+//
+//    func didFailToLoadData(with error: Error) {
+//        // Метод для обработки неудачного запроса данных от апи
+//    
+//        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+//    }
 }
 
 
