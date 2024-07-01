@@ -1,10 +1,11 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
-    // Вью-класс для основного экрана с вопросами квиза
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
-    var alertDelegate: AlertPresenterProtocol = AlertPresenter()
-    private let presenter = MovieQuizPresenter()
+    // Вью-класс для основного экрана с вопросами квиза
+
+    var alertDelegate: AlertPresenterProtocol?
+    private var presenter: MovieQuizPresenter!
     
     @IBOutlet weak private var questionTitleLabel: UILabel!
     @IBOutlet weak private var indexLabel: UILabel!
@@ -36,19 +37,10 @@ final class MovieQuizViewController: UIViewController {
         yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
         // Делегат алерта
-        let alertDelegate = AlertPresenter()
-        alertDelegate.alertController = self
-        self.alertDelegate = alertDelegate
+        self.alertDelegate = AlertPresenter()
+        self.alertDelegate?.alertController = self
         
-        // Делегат фабрики вопросов
-        presenter.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: presenter)  // Создаём экземпляр фабрики для ее настройки
-        
-        presenter.statisticService = StatisticService()
-        
-        showLoadingIndicator()
-        presenter.questionFactory?.loadData()
-        
-        presenter.viewController = self
+        self.presenter = MovieQuizPresenter(viewController: self)
     }
     
     func showAnswerResult(isCorrect: Bool) {
@@ -92,6 +84,25 @@ final class MovieQuizViewController: UIViewController {
         // Функция для скрытия индикатора загрузки
         activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
+    }
+    
+    func showNetworkError(message: String) {
+        // Функция, которая отображает алерт с ошибкой загрузки
+        
+        self.hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        // показываем алерт с ошибкой загрузки данных по сети"
+        let alertModel = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать еще раз",
+            completion: {[weak self] in
+                guard let self = self else { return }
+                
+                presenter.resetQuestionIndex()
+            }
+        )
+        self.alertDelegate?.show(alertModel: alertModel)
     }
 }
 

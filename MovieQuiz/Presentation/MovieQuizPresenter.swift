@@ -12,10 +12,21 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     private var currentQuestion: QuizQuestion?
-    weak var viewController: MovieQuizViewController?
+    weak var viewController: MovieQuizViewControllerProtocol?
     var statisticService: StatisticServiceProtocol?
     var questionFactory: QuestionFactoryProtocol?
     private var correctAnswers = 0
+    private var alertDelegate: AlertPresenterProtocol?
+    
+    init(viewController: MovieQuizViewControllerProtocol) {
+        self.viewController = viewController
+                
+        self.statisticService = StatisticService()
+        
+        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self) // Создаём экземпляр фабрики для ее настройки
+        viewController.showLoadingIndicator()
+        self.questionFactory?.loadData()
+    }
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
@@ -94,7 +105,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 self?.resetQuestionIndex()
                 self?.questionFactory?.requestNextQuestion()
             })
-        viewController!.alertDelegate.show(alertModel: alertModel)
+        viewController!.alertDelegate?.show(alertModel: alertModel)
     }
     
     func didLoadDataFromServer() {
@@ -107,27 +118,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     func didFailToLoadData(with error: Error) {
         // Метод для обработки неудачного запроса данных от апи
     
-        self.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
-    }
-    
-    private func showNetworkError(message: String) {
-        // Функция, которая отображает алерт с ошибкой загрузки
-        
-        viewController!.hideLoadingIndicator() // скрываем индикатор загрузки
-        
-        // показываем алерт с ошибкой загрузки данных по сети"
-        let alertModel = AlertModel(
-            title: "Что-то пошло не так(",
-            message: "Невозможно загрузить данные",
-            buttonText: "Попробовать еще раз",
-            completion: {[weak self] in
-                guard let self = self else { return }
-                
-                self.resetQuestionIndex()
-                // TODO: тут надо дописать логику повторного запроса на получение данных о фильмах по API
-            }
-        )
-        viewController!.alertDelegate.show(alertModel: alertModel)
+        viewController!.showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
     }
     
     // MARK: - QuestionFactoryDelegate
